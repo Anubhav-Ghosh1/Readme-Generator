@@ -206,10 +206,10 @@ export default function GenerateReadme() {
                 <input
                   type="text"
                   id={social.name}
-                  placeholder={`https://${social.prefix}your-username`}
+                  placeholder={`${social.prefix}your-username`}
                   className={`${inputSocialClass}`}
                   onChange={(e) =>
-                    updateSocialLink(social.name, e.target.value)
+                    updateSocialLink(social.name, `${social.prefix}${e.target.value}`)
                   }
                 />
               </div>
