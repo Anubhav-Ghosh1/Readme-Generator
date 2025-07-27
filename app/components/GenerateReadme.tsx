@@ -1,7 +1,12 @@
 "use client";
 import React, { useState } from "react";
-import { techOptions } from "../mockdata/techList";
+import { socialOptions } from "../mockdata/socialList";
 import Image from "next/image";
+import { techOptions } from "../mockdata/techList";
+import { IconWrapper } from "./IconWrapper";
+import { useReadmeStore } from "../store/useReadmeStore";
+import { generateMarkdown } from "../utils/buildMarkdown";
+import toast from "react-hot-toast";
 
 export default function GenerateReadme() {
   const headingClass = "text-2xl text-gray-900 font-medium mb-4";
@@ -10,13 +15,41 @@ export default function GenerateReadme() {
   const inputClass =
     "bg-transparent mb-1.5 text-sm placeholder:text-gray-500 text-gray-900 focus:outline-none focus:border-blue-500 transition-all duration-150 min-w-[250px]";
   const inputContainer = "flex items-center gap-2";
-  const [selectedTech, setSelectedTech] = useState<string[]>([]);
-
-  const toggleTech = (tech: string) => {
-    setSelectedTech((prev) =>
-      prev.includes(tech) ? prev.filter((t) => t !== tech) : [...prev, tech]
-    );
+  const inputSocialClass =
+    "bg-transparent mb-1.5 text-sm placeholder:text-gray-500 text-gray-900 focus:outline-none focus:border-blue-500 transition-all duration-150 min-w-[450px]";
+  const [saveMarkDown, setSaveMarkDown] = useState<string>("");
+  let handleGenerateReadme = () => {
+    const state = useReadmeStore.getState();
+    const generatedMarkdown = generateMarkdown(state);
+    setSaveMarkDown(generatedMarkdown);
+    toast.success("Readme generated successfully!");
   };
+
+  let handleCopy = () => {
+    navigator.clipboard.writeText(saveMarkDown);
+    toast.success("Copied to clipboard!");
+  };
+
+  const {
+    title,
+    currentlyWorking,
+    currentlyLearning,
+    askMeAbout,
+    reachMeAt,
+    selectedTech,
+    showTrophies,
+    showContributions,
+    socialLinks,
+    setField,
+    toggleTech,
+    updateSocialLink,
+  } = useReadmeStore();
+
+  // const toggleTechSelect = (tech: string) => {
+  //   setSelectedTech((prev) =>
+  //     prev.includes(tech) ? prev.filter((t) => t !== tech) : [...prev, tech]
+  //   );
+  // };
 
   return (
     <div className="p-10 space-y-10 max-w-4xl mx-auto">
@@ -27,6 +60,7 @@ export default function GenerateReadme() {
             type="text"
             placeholder="Hi I'm Full Stack Developer"
             className={inputClass}
+            onChange={(e) => setField("title", e.target.value)}
           />
         </div>
       </div>
@@ -44,6 +78,7 @@ export default function GenerateReadme() {
                 name="currently-working"
                 placeholder="I am currently working at"
                 className={inputClass}
+                onChange={(e) => setField("currentlyWorking", e.target.value)}
               />
             </div>
           </div>
@@ -58,6 +93,7 @@ export default function GenerateReadme() {
                 name="currently-learning"
                 placeholder="I am learning"
                 className={inputClass}
+                onChange={(e) => setField("currentlyLearning", e.target.value)}
               />
             </div>
           </div>
@@ -72,6 +108,7 @@ export default function GenerateReadme() {
                 name="ask-me-about"
                 placeholder="Ask me about"
                 className={inputClass}
+                onChange={(e) => setField("askMeAbout", e.target.value)}
               />
             </div>
           </div>
@@ -86,6 +123,7 @@ export default function GenerateReadme() {
                 name="reach-me-at"
                 placeholder="You can reach me at"
                 className={inputClass}
+                onChange={(e) => setField("reachMeAt", e.target.value)}
               />
             </div>
           </div>
@@ -121,7 +159,66 @@ export default function GenerateReadme() {
       </div>
 
       <div>
-        {/* Social section */}
+        <p className={headingClass}>Social Links</p>
+        {socialOptions.map((social) => (
+          <div key={social.name} className="mb-4">
+            <div className="flex items-center gap-2">
+              <IconWrapper
+                iconName={social.iconName}
+                size={24}
+                className={`${social.color}`}
+              />
+              <div className={inputWrapper}>
+                <input
+                  type="text"
+                  id={social.name}
+                  placeholder={`https://${social.prefix}/your-username`}
+                  className={`${inputSocialClass}`}
+                  onChange={(e) =>
+                    updateSocialLink(social.name, e.target.value)
+                  }
+                />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div>
+        <p className="text-2xl text-gray-900 font-medium mb-4">GitHub Stats</p>
+        <div className="flex flex-col space-y-4">
+          <label className="inline-flex items-center space-x-3">
+            <input
+              type="checkbox"
+              checked={showTrophies}
+              onChange={() => setField("showTrophies", !showTrophies)}
+              className="w-4 h-4"
+            />
+            <span className="text-gray-800 text-sm">Show GitHub Trophies</span>
+          </label>
+
+          <label className="inline-flex items-center space-x-3">
+            <input
+              type="checkbox"
+              checked={showContributions}
+              onChange={() => setField("showContributions", !showContributions)}
+              className="w-4 h-4"
+            />
+            <span className="text-gray-800 text-sm">
+              Show Contribution Graph
+            </span>
+          </label>
+        </div>
+      </div>
+      <div className="flex items-center gap-2">
+        <button
+          className="bg-white border-gray-900 px-2 py-1 rounded-lg hover:bg-gray-50 shadow-lg border"
+          onClick={handleGenerateReadme}
+        >
+          Generate Readme
+        </button>
+        {saveMarkDown.length > 0 && (
+          <button className="bg-white border-gray-900 px-2 py-1 rounded-lg hover:bg-gray-50 shadow-lg border" onClick={handleCopy}>Copy to Clipboard</button>
+        )}
       </div>
     </div>
   );
