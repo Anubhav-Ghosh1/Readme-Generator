@@ -41,6 +41,7 @@ export default function GenerateReadme() {
     askMeAbout,
     reachMeAt,
     selectedTech,
+    showTechContributions,
     showTrophies,
     showContributions,
     socialLinks,
@@ -61,17 +62,33 @@ export default function GenerateReadme() {
         <div className="border-b border-gray-900 mb-4">
           <p className={headingClass}>Title</p>
         </div>
-        <div className={inputContainer}>
-          <label htmlFor="title" className={labelClass}>
-            About me
-          </label>
-          <div className={inputWrapper}>
-            <input
-              type="text"
-              placeholder="Hi I'm Full Stack Developer"
-              className={`${inputClass}`}
-              onChange={(e) => setField("title", e.target.value)}
-            />
+        <div className="flex flex-col gap-4">
+          <div className={inputContainer}>
+            <label htmlFor="title" className={labelClass}>
+              About me
+            </label>
+            <div className={inputWrapper}>
+              <input
+                type="text"
+                placeholder="Hi I'm Full Stack Developer"
+                className={`${inputClass}`}
+                onChange={(e) => setField("title", e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="flex gap-2 items-center">
+            <label htmlFor="username" className={labelClass}>
+              Github Username
+            </label>
+            <div className={inputWrapper}>
+              <input
+                type="text"
+                name="username"
+                placeholder="Anubhav-Ghosh1"
+                className={`${inputClass}`}
+                onChange={(e) => setField("username", e.target.value)}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -189,7 +206,7 @@ export default function GenerateReadme() {
                 <input
                   type="text"
                   id={social.name}
-                  placeholder={`https://${social.prefix}/your-username`}
+                  placeholder={`https://${social.prefix}your-username`}
                   className={`${inputSocialClass}`}
                   onChange={(e) =>
                     updateSocialLink(social.name, e.target.value)
@@ -224,6 +241,20 @@ export default function GenerateReadme() {
             />
             <span className="text-gray-800 text-sm">
               Show Contribution Graph
+            </span>
+          </label>
+
+          <label className="inline-flex items-center space-x-3">
+            <input
+              type="checkbox"
+              checked={showTechContributions}
+              onChange={() =>
+                setField("showTechContributions", !showTechContributions)
+              }
+              className="w-4 h-4"
+            />
+            <span className="text-gray-800 text-sm">
+              Show Tech Contribution Graph
             </span>
           </label>
         </div>

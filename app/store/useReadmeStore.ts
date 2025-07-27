@@ -46,6 +46,7 @@ export interface ReadmeStore {
   selectedTech: string[];
   socialLinks: SocialLink[];
   showTrophies: boolean;
+  showTechContributions: boolean;
   showContributions: boolean;
 
   setField: <T extends keyof ReadmeStore>(key: T, value: ReadmeStore[T]) => void;
@@ -63,6 +64,7 @@ export const useReadmeStore = create<ReadmeStore>((set) => ({
   selectedTech: [],
   socialLinks: [],
   showTrophies: false,
+  showTechContributions: false,
   showContributions: false,
 
   setField: (key, value) => set({ [key]: value }),

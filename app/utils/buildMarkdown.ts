@@ -37,12 +37,10 @@ export function generateMarkdown(data: ReadmeStore): string {
     md += `🌱 I’m currently learning **${data.currentlyLearning}**\n\n`;
 
   // Ask me about
-  if (data.askMeAbout)
-    md += `💬 Ask me about **${data.askMeAbout}**\n\n`;
+  if (data.askMeAbout) md += `💬 Ask me about **${data.askMeAbout}**\n\n`;
 
   // Contact
-  if (data.reachMeAt)
-    md += `📫 Reach me at **${data.reachMeAt}**\n\n`;
+  if (data.reachMeAt) md += `📫 Reach me at **${data.reachMeAt}**\n\n`;
 
   // Tech Stack
   if (data.selectedTech.length > 0) {
@@ -81,7 +79,13 @@ export function generateMarkdown(data: ReadmeStore): string {
   // Contribution Graph
   if (data.showContributions && data.username) {
     md += `## 📈 Contribution Graph\n\n`;
-    md += `![Contribution Graph](https://github-readme-activity-graph.cyclic.app/graph?username=${data.username}&theme=github-compact)\n\n`;
+    md += `![Contribution Graph](https://github-readme-activity-graph.vercel.app/graph?username=${data.username}&theme=github-compact
+)\n\n`;
+  }
+
+  if (data.showTechContributions && data.username) {
+    md += `## 🛠️ Tech Contributions\n\n`;
+    md += `![Tech Contributions](https://github-readme-stats.vercel.app/api/top-langs/?username=${data.username}&layout=compact)\n\n`;
   }
 
   return md;
