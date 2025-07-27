@@ -9,7 +9,7 @@ import { generateMarkdown } from "../utils/buildMarkdown";
 import toast from "react-hot-toast";
 
 export default function GenerateReadme() {
-  const headingClass = "text-2xl text-gray-900 font-medium mb-4";
+  const headingClass = "text-2xl text-gray-900 font-medium";
   const labelClass = "text-gray-900 text-sm font-medium mb-1 block";
   const inputWrapper = "inline-block border-b border-gray-400";
   const inputClass =
@@ -20,6 +20,10 @@ export default function GenerateReadme() {
   const [saveMarkDown, setSaveMarkDown] = useState<string>("");
   let handleGenerateReadme = () => {
     const state = useReadmeStore.getState();
+    if (!state.username) {
+      toast.error("Please enter your username!");
+      return;
+    }
     const generatedMarkdown = generateMarkdown(state);
     setSaveMarkDown(generatedMarkdown);
     toast.success("Readme generated successfully!");
@@ -54,19 +58,28 @@ export default function GenerateReadme() {
   return (
     <div className="p-10 space-y-10 max-w-4xl mx-auto">
       <div>
-        <p className={headingClass}>Title</p>
-        <div className={inputWrapper}>
-          <input
-            type="text"
-            placeholder="Hi I'm Full Stack Developer"
-            className={inputClass}
-            onChange={(e) => setField("title", e.target.value)}
-          />
+        <div className="border-b border-gray-900 mb-4">
+          <p className={headingClass}>Title</p>
+        </div>
+        <div className={inputContainer}>
+          <label htmlFor="title" className={labelClass}>
+            About me
+          </label>
+          <div className={inputWrapper}>
+            <input
+              type="text"
+              placeholder="Hi I'm Full Stack Developer"
+              className={`${inputClass}`}
+              onChange={(e) => setField("title", e.target.value)}
+            />
+          </div>
         </div>
       </div>
 
       <div>
-        <p className={headingClass}>Work</p>
+        <div className="border-b border-gray-900 mb-4">
+          <p className={headingClass}>Work</p>
+        </div>
         <div className="space-y-4">
           <div className={inputContainer}>
             <label htmlFor="currently-working" className={labelClass}>
@@ -131,7 +144,9 @@ export default function GenerateReadme() {
       </div>
 
       <div>
-        <p className={headingClass}>Skills</p>
+        <div className="border-b border-gray-900 mb-4">
+          <p className={headingClass}>Skills</p>
+        </div>
         <p className="text-gray-900 mb-4">Tech Stack</p>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {techOptions.map((tech) => (
@@ -159,7 +174,9 @@ export default function GenerateReadme() {
       </div>
 
       <div>
-        <p className={headingClass}>Social Links</p>
+        <div className="border-b border-gray-900 mb-4">
+          <p className={headingClass}>Social Links</p>
+        </div>
         {socialOptions.map((social) => (
           <div key={social.name} className="mb-4">
             <div className="flex items-center gap-2">
@@ -184,7 +201,9 @@ export default function GenerateReadme() {
         ))}
       </div>
       <div>
-        <p className="text-2xl text-gray-900 font-medium mb-4">GitHub Stats</p>
+        <div className="border-b border-gray-900 mb-4">
+          <p className="text-2xl text-gray-900 font-medium">GitHub Stats</p>
+        </div>
         <div className="flex flex-col space-y-4">
           <label className="inline-flex items-center space-x-3">
             <input
@@ -210,14 +229,29 @@ export default function GenerateReadme() {
         </div>
       </div>
       <div className="flex items-center gap-2">
-        <button
-          className="bg-white border-gray-900 px-2 py-1 rounded-lg hover:bg-gray-50 shadow-lg border"
-          onClick={handleGenerateReadme}
-        >
-          Generate Readme
-        </button>
+        <div className="relative group">
+          <button
+            className="bg-white border-gray-900 text-gray-900 px-2 py-1 rounded-lg hover:bg-gray-50 shadow-lg border"
+            onClick={handleGenerateReadme}
+          >
+            Generate Readme
+            <span className="absolute left-1/2 -translate-x-1/2 -top-8 opacity-0 group-hover:opacity-100 transition bg-gray-800 text-white text-[10px] rounded px-2 py-1 pointer-events-none z-10 whitespace-nowrap">
+              Generate markdown
+            </span>
+          </button>
+        </div>
         {saveMarkDown.length > 0 && (
-          <button className="bg-white border-gray-900 px-2 py-1 rounded-lg hover:bg-gray-50 shadow-lg border" onClick={handleCopy}>Copy to Clipboard</button>
+          <div className="relative group">
+            <button
+              className="bg-white border-gray-900 flex items-center gap-1 text-gray-900 px-2 py-1 rounded-lg hover:bg-gray-50 shadow-lg border"
+              onClick={handleCopy}
+            >
+              Copy to Clipboard
+            </button>
+            <span className="absolute left-1/2 -translate-x-1/2 -top-8 opacity-0 group-hover:opacity-100 transition bg-gray-800 text-white text-[10px] rounded px-2 py-1 pointer-events-none z-10 whitespace-nowrap">
+              Copy markdown to clipboard
+            </span>
+          </div>
         )}
       </div>
     </div>
